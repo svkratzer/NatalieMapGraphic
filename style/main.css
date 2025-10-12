@@ -1,0 +1,4 @@
+/* Main svg styling */
+body { background: #fff; }
+svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px solid #888; }
+
