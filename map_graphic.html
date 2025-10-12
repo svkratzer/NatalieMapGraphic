@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>natalie's grand journey</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <link href="https://fonts.googleapis.com/css?family=Honk&effect=anaglyph" rel="stylesheet">
+    <style>
+      body { background: #fff; }
+      svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px solid #888; }
+    </style>
+  </head>
+  <body>
+    <svg id="us-map"></svg>
+    <script>
+      const topojson_url = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+      const width = 850, height = 500;
+      const line_color = "#C07C88", map_color = "#BFBFBF", city_color = "#C07C88", text_color = "#464646";
+      const nyc_color = "#F2CA44", fargo_color = "#E05E58";
+      const font_name = "Honk"
+      const svg = d3.select("#us-map")
+        .attr("width", width)
+        .attr("height", height);
+
+      const projection = d3.geoAlbersUsa()
+        .scale(1000)
+        .translate([width / 2, height / 2]);
+      const path = d3.geoPath().projection(projection);
+      const cities = [
+        { name: "Fargo", coords: [-96.7898, 46.8772] },
+        { name: "NYC", coords: [-74.0060, 40.7128] }
+      ];
+
+      d3.json(topojson_url).then(function(us) {
+        // Get TopoJSON geometries (not features!)
+        const stateObjects = us.objects.states.geometries
+          .filter(d => d.id !== "02" && d.id !== "15");
+
+        // Merge geometries using TopoJSON
+        const contiguous = topojson.merge(us, stateObjects);
+
+        // Now render as one outline
+        svg.append("path")
+          .datum({type: "Feature", geometry: contiguous})
+          .attr("d", path)
+          .attr("fill", map_color)
+          .attr("stroke", map_color)
+          .attr("stroke-width", 1.5);
+              
+          // Project city coordinates
+        cities.forEach(city => {
+          city.pixel = projection(city.coords);
+        });
+        // SVG path data for the icons
+        const housePath = `M10 30
+          C10 10, 50 10, 50 30
+          C50 10, 90 10, 90 30
+          C90 60, 50 90, 50 90
+          C50 90, 10 60, 10 30
+          Z`;
+        const starPath = "M0,-12 L3.53,-3.71 L11.42,-3.71 L5.94,1.41 L7.94,9.51 L0,5.35 L-7.94,9.51 L-5.94,1.41 L-11.42,-3.71 L-3.53,-3.71 Z";
+
+        // Fargo marker: house
+        svg.append("path")
+          .attr("d", housePath)
+          .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(0.4)`)
+          .attr("fill", fargo_color)
+          .attr("stroke", text_color)
+          .attr("stroke-width", 1);
+
+        // NYC marker: star
+        svg.append("path")
+          .attr("d", starPath)
+          .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(1.5)`)
+          .attr("fill", nyc_color)
+          .attr("stroke", text_color)
+          .attr("stroke-width", .5);
+        
+        // Define offsets for each city label
+        const nyc_x_offset = -28;
+        const nyc_y_offset = -20;
+        const fargo_x_offset = -48;
+        const fargo_y_offset = -18;
+
+        // Add city labels with respective offsets
+        const font_family = `${font_name}, sans-serif`
+        // svg.selectAll("text.city-label")
+        //   .data(cities)
+        //   .enter()
+        //   .append("text")
+        //   .attr("class", "city-label")
+        //   .attr("x", d => {
+        //     if (d.name === "NYC") return d.pixel[0] + nyc_x_offset;
+        //     if (d.name === "Fargo") return d.pixel[0] + fargo_x_offset;
+        //     return d.pixel[0]; // fallback
+        //   })
+        //   .attr("y", d => {
+        //     if (d.name === "NYC") return d.pixel[1] + nyc_y_offset;
+        //     if (d.name === "Fargo") return d.pixel[1] + fargo_y_offset;
+        //     return d.pixel[1]; // fallback
+        //   })
+        //   .text(d => d.name.toUpperCase())
+        //   .attr("font-family", font_family)
+        //   .attr("font-size", "18px")
+        //   .attr("fill", text_color)
+        //   .attr("font-weight", "bold")
+        //   .attr("alignment-baseline", "middle");
+        
+        // Step 5: Draw and Animate Curved Route
+        const routeWaypoints = [
+          [-93.5, 45.5], // Fargo, ND
+          [-92.3, 45.1], // Fargo, ND
+          [-90.4012, 43.0731], // Madison, WI
+          [-92.5890, 39.6936], // Peoria, IL
+          [-89.5890, 37.6936], // Peoria, IL
+          [-86.1581, 39.7684], // Indianapolis, IN
+          [-82.9988, 39.9612], // Columbus, OH
+          [-79.9959, 39.4406], // Pittsburgh, PA
+          [-78.9784, 41.0864], // Buffalo, NY
+          [-77.65, 41.00],  // NYC
+          [-74.25, 40.80]  // NYC
+        ];
+        const projectedRoute = routeWaypoints.map(projection);
+        const routeLine = d3.line()
+          .x(d => d[0])
+          .y(d => d[1])
+          .curve(d3.curveBasis);
+        // Calculate dash positions along the path
+        const dashLength = 10;
+        const gapLength = 8;
+        const tempPath = svg.append("path")
+          .attr("d", routeLine(projectedRoute))
+          .attr("fill", "none")
+          .attr("stroke", "none"); // invisible, just for calculations
+
+        const totalLength = tempPath.node().getTotalLength();
+        const numDashes = Math.floor(totalLength / (dashLength + gapLength));
+        const dashPositions = [];
+        for (let i = 0; i < numDashes; i++) {
+          const start = i * (dashLength + gapLength);
+          const end = start + dashLength;
+          const p1 = tempPath.node().getPointAtLength(start);
+          const p2 = tempPath.node().getPointAtLength(end);
+          dashPositions.push({p1, p2});
+        }
+        tempPath.remove();
+
+        // Render all dashes in base color
+        svg.selectAll(".route-dash")
+          .data(dashPositions)
+          .enter()
+          .append("line")
+          .attr("class", "route-dash")
+          .attr("x1", d => d.p1.x)
+          .attr("y1", d => d.p1.y)
+          .attr("x2", d => d.p2.x)
+          .attr("y2", d => d.p2.y)
+          .attr("stroke", line_color)
+          .attr("stroke-width", 6)
+          .attr("opacity", 1);
+
+        // Render highlight dashes (initially the first 5)
+        const highlight_color = "#F2CA44"; // Use whatever color you like!
+        const numHighlights = 5;
+        const highlightLines = svg.selectAll(".route-highlight")
+          .data(new Array(numHighlights).fill(0))
+          .enter()
+          .append("line")
+          .attr("class", "route-highlight")
+          .attr("stroke", highlight_color)
+          .attr("stroke-width", 6)
+          .attr("opacity", 1);
+
+        // Animate the highlights
+        let highlightIndex = 0;
+        d3.interval(() => {
+          for (let i = 0; i < numHighlights; i++) {
+            let dashIdx = (highlightIndex + i) % dashPositions.length;
+            const d = dashPositions[dashIdx];
+            highlightLines
+              .filter((_, j) => j === i)
+              .attr("x1", d.p1.x)
+              .attr("y1", d.p1.y)
+              .attr("x2", d.p2.x)
+              .attr("y2", d.p2.y);
+          }
+          highlightIndex = (highlightIndex + 1) % dashPositions.length;
+        }, 120); // change 120 for speed
+      });
+    </script>
+  </body>
+</html>
