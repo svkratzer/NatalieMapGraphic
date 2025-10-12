@@ -1,5 +1,5 @@
 :root {
-  --slideshow-size-scale: 0.85;
+  --slideshow-size-scale: 0.75;
 }
 
 /* ~~~~~~~~~~~~~~~~~~ */
@@ -19,7 +19,9 @@ svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px sol
   bottom: calc(30px * var(--slideshow-size-scale));
   width: calc(220px * var(--slideshow-size-scale));
   height: calc(320px * var(--slideshow-size-scale));
-  pointer-events: none; /* so it doesn't block map interactions */
+  pointer-events: hover; /* so it doesn't block map interactions */
+  cursor: pointer;
+  transition: transform 0.5s;
 }
 
 .polaroid {
@@ -27,12 +29,11 @@ svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px sol
   width: calc(200px * var(--slideshow-size-scale));
   height: calc(250px * var(--slideshow-size-scale));
   background: #fffbe9; /* Example: pale yellow */
-  border: 2px solid #ddd;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.083);
   padding: 12px 12px 30px 12px;
   box-sizing: border-box;
   left: 0; top: 0;
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s, background 0.3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,15 +44,36 @@ svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px sol
   height: calc(176px * var(--slideshow-size-scale));
   object-fit: cover;
   border-radius: 6px;
+  transition: filter 0.3s;
 }
 
 .polaroid-label {
   font-family: "Playwrite HU", cursive;
   font-optical-sizing: auto;
-  font-size: calc(1.05em * var(--slideshow-size-scale));
+  font-size: calc(1.55em * var(--slideshow-size-scale));
   color: #555;
-  margin-top: 10px;
+  margin-top: 5px;
   text-align: center;
   background: transparent;
   width: 100%;
+}
+
+/* Polaroid hover state: images grayscale, bg dark, font bolder/color */
+#polaroid-slideshow.paused .polaroid img {
+  filter: grayscale(100%);
+}
+#polaroid-slideshow.paused .polaroid {
+  background: #000000;
+  transition: background 0.3s;
+}
+#polaroid-slideshow.paused .polaroid-label {
+  font-weight: 600;
+  color: #000000; /* example accent color */
+  transition: color 0.1s, font-weight 0.1s;
+}
+
+/* Scale up slideshow when paused */
+#polaroid-slideshow.paused {
+  transform: scale(1.13);
+  transition: transform 0.5s;
 }

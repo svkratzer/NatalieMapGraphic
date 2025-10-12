@@ -9,6 +9,10 @@ let polaroidElements = [];
 let currentPhoto = 0;
 let polaroidCount = 0;
 
+let intervalPhoto = null;
+let intervalStack = null;
+let paused = false;
+
 function addPolaroid(photo, rotation) {
   const polaroid = document.createElement('div');
   polaroid.className = 'polaroid';
@@ -30,21 +34,43 @@ function nextPhoto() {
   currentPhoto = (currentPhoto + 1) % photos.length;
 }
 
-export function mountSlideShow(slideshowPixel) {
-  // Position the slideshow at map coordinates in Route.js
-  polaroidContainer.style.position = 'absolute';
-  console.log(slideshowPixel)
-  polaroidContainer.style.left = `${slideshowPixel[0]}px`;
-  polaroidContainer.style.top = `${slideshowPixel[1]}px`;
-
-  setInterval(nextPhoto, 1000);
-
-  // Optionally: Limit stacking to N visible polaroids
-  const maxStack = 7;
-  setInterval(() => {
+function startSlideshow() {
+  intervalPhoto = setInterval(nextPhoto, 1000);
+  intervalStack = setInterval(() => {
+    const maxStack = 7;
     if (polaroidElements.length > maxStack) {
       const old = polaroidElements.shift();
       old.remove();
     }
   }, 500);
+}
+
+function pauseSlideshow() {
+  clearInterval(intervalPhoto);
+  clearInterval(intervalStack);
+}
+
+export function mountSlideShow(slideshowPixel) {
+  // Position the slideshow at map coordinates in Route.js
+  polaroidContainer.style.position = 'absolute';
+  polaroidContainer.style.left = `${slideshowPixel[0]}px`;
+  polaroidContainer.style.top = `${slideshowPixel[1]}px`;
+
+  startSlideshow();
+
+  // Hover events to pause/resume and toggle visual state
+  polaroidContainer.addEventListener('mouseenter', () => {
+    if (!paused) {
+      paused = true;
+      polaroidContainer.classList.add('paused');
+      pauseSlideshow();
+    }
+  });
+  polaroidContainer.addEventListener('mouseleave', () => {
+    if (paused) {
+      paused = false;
+      polaroidContainer.classList.remove('paused');
+      startSlideshow();
+    }
+  });
 }
