@@ -32,6 +32,7 @@
         { name: "Fargo", coords: [-96.7898, 46.8772] },
         { name: "NYC", coords: [-74.0060, 40.7128] }
       ];
+      const nyc_x = cities[1][0], nyc_y = cities[1][1], fargo_x = cities[0][0], fargo_y = cities[0][1];
 
       d3.json(topojson_url).then(function(us) {
         // Get TopoJSON geometries (not features!)
@@ -54,7 +55,7 @@
           city.pixel = projection(city.coords);
         });
         // SVG path data for the icons
-        const housePath = `M10 30
+        const heartPath = `M10 30
           C10 10, 50 10, 50 30
           C50 10, 90 10, 90 30
           C90 60, 50 90, 50 90
@@ -62,22 +63,6 @@
           Z`;
         const starPath = "M0,-12 L3.53,-3.71 L11.42,-3.71 L5.94,1.41 L7.94,9.51 L0,5.35 L-7.94,9.51 L-5.94,1.41 L-11.42,-3.71 L-3.53,-3.71 Z";
 
-        // Fargo marker: house
-        svg.append("path")
-          .attr("d", housePath)
-          .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(0.4)`)
-          .attr("fill", fargo_color)
-          .attr("stroke", text_color)
-          .attr("stroke-width", 1);
-
-        // NYC marker: star
-        svg.append("path")
-          .attr("d", starPath)
-          .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(1.5)`)
-          .attr("fill", nyc_color)
-          .attr("stroke", text_color)
-          .attr("stroke-width", .5);
-        
         // Define offsets for each city label
         const nyc_x_offset = -28;
         const nyc_y_offset = -20;
@@ -258,6 +243,53 @@
             rtlIndicesArr[set] = (rtlIndicesArr[set] - 1 + numDashes) % numDashes;
           }
         }, 120); // animation speed
+
+        // Define offsets for each city label
+        const star_x_offset = 0;
+        const star_y_offset = 0;
+        const heart_x_offset = 8;
+        const heart_y_offset = 8;
+
+        // Fargo marker: heart
+        svg.append("path")
+          .attr("d", heartPath)
+          .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(0.4)`)
+          .attr("fill", fargo_color)
+          .attr("stroke", text_color)
+          .attr("stroke-width", 1)
+          .style("cursor", "pointer")
+          .on("click", () => window.open("https://link-for-fargo.com", "_blank"))
+          .on("mouseover", function() {
+            d3.select(this)
+              .transition().duration(150)
+              .attr("transform", `translate(${(cities[0].pixel[0] - heart_x_offset)},${(cities[0].pixel[1] - heart_y_offset)}) scale(0.55)`)
+            })
+          .on("mouseout", function() {
+            d3.select(this)
+              .transition().duration(150)
+              .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(0.4)`)
+            });
+
+        // NYC marker: star
+        svg.append("path")
+          .attr("class", "nyc-star")
+          .attr("d", starPath)
+          .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(1.5)`)
+          .attr("fill", nyc_color)
+          .attr("stroke", text_color)
+          .attr("stroke-width", .5)
+          .style("cursor", "pointer")
+          .on("click", () => window.open("https://link-for-nyc.com", "_blank"))
+          .on("mouseover", function() {
+            d3.select(this)
+              .transition().duration(150)
+              .attr("transform", `translate(${(cities[1].pixel[0] - star_x_offset)},${(cities[1].pixel[1] - star_y_offset)}) scale(2.1)`)
+          })
+          .on("mouseout", function() {
+            d3.select(this)
+              .transition().duration(150)
+              .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(1.5)`)
+          });
       });
     </script>
   </body>
