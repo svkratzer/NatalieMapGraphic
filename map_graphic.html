@@ -16,7 +16,8 @@
     <script>
       const topojson_url = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
       const width = 850, height = 500;
-      const line_color = "#C07C88", map_color = "#BFBFBF", city_color = "#C07C88", text_color = "#464646";
+      const line_color = "#E9ADA2", map_color = "#BFBFBF", city_color = "#C07C88", text_color = "#464646";
+      const primary_color = "#BC292D", secondary_color = "#97AAAE";
       const nyc_color = "#F2CA44", fargo_color = "#E05E58";
       const font_name = "Honk"
       const svg = d3.select("#us-map")
@@ -46,7 +47,7 @@
           .attr("d", path)
           .attr("fill", map_color)
           .attr("stroke", map_color)
-          .attr("stroke-width", 1.5);
+          .attr("stroke-width", 3);
               
           // Project city coordinates
         cities.forEach(city => {
@@ -160,33 +161,103 @@
           .attr("stroke-width", 6)
           .attr("opacity", 1);
 
-        // Render highlight dashes (initially the first 5)
-        const highlight_color = "#F2CA44"; // Use whatever color you like!
-        const numHighlights = 5;
+        // Parameters for highlights
+        const highlight_color = nyc_color; // NYC highlight
+        const fargo_highlight = fargo_color; // Fargo highlight
+        const overlap_color = secondary_color; // Third color for overlap (choose as you like)
+        const numHighlights = 3;
+        const numHighlightSets = 3;
+        const setOffset = Math.floor(numDashes / 2); // Halfway
+
+        // Create highlight lines for LTR (left-to-right)
         const highlightLines = svg.selectAll(".route-highlight")
-          .data(new Array(numHighlights).fill(0))
+          .data(new Array(numHighlights * numHighlightSets).fill(0))
           .enter()
           .append("line")
           .attr("class", "route-highlight")
-          .attr("stroke", highlight_color)
           .attr("stroke-width", 6)
           .attr("opacity", 1);
 
-        // Animate the highlights
+        // Create highlight lines for RTL (right-to-left)
+        const highlightLinesRL = svg.selectAll(".route-highlight-rl")
+          .data(new Array(numHighlights * numHighlightSets).fill(0))
+          .enter()
+          .append("line")
+          .attr("class", "route-highlight-rl")
+          .attr("stroke-width", 6)
+          .attr("opacity", 1);
+
         let highlightIndex = 0;
+        let highlightIndexRL = numDashes - numHighlights;
+
+        // Initialize each highlight set's index independently
+        const ltrIndicesArr = new Array(numHighlightSets)
+          .fill(0)
+          .map((_, i) => i * Math.floor(numDashes / numHighlightSets));
+
+        const rtlIndicesArr = new Array(numHighlightSets)
+          .fill(0)
+          .map((_, i) => numDashes - 1 - i * Math.floor(numDashes / numHighlightSets));
+
         d3.interval(() => {
-          for (let i = 0; i < numHighlights; i++) {
-            let dashIdx = (highlightIndex + i) % dashPositions.length;
-            const d = dashPositions[dashIdx];
-            highlightLines
-              .filter((_, j) => j === i)
-              .attr("x1", d.p1.x)
-              .attr("y1", d.p1.y)
-              .attr("x2", d.p2.x)
-              .attr("y2", d.p2.y);
+          // LEFT TO RIGHT sets
+          for (let set = 0; set < numHighlightSets; set++) {
+            const setBase = set * numHighlights;
+            // For this set, get the indices of the highlights
+            const ltrIndices = [];
+            for (let i = 0; i < numHighlights; i++) {
+              ltrIndices.push((ltrIndicesArr[set] + i) % numDashes);
+            }
+            // Draw highlights for this set
+            ltrIndices.forEach((idx, i) => {
+              // Check overlap as before
+              let isOverlap = false;
+              for (let setRL = 0; setRL < numHighlightSets; setRL++) {
+                for (let j = 0; j < numHighlights; j++) {
+                  let idxRL = (rtlIndicesArr[setRL] - j + numDashes) % numDashes;
+                  if (idxRL === idx) isOverlap = true;
+                }
+              }
+              const d = dashPositions[idx];
+              d3.select(highlightLines.nodes()[setBase + i])
+                .attr("x1", d.p1.x)
+                .attr("y1", d.p1.y)
+                .attr("x2", d.p2.x)
+                .attr("y2", d.p2.y)
+                .attr("stroke", isOverlap ? overlap_color : highlight_color);
+            });
+            // Advance this set
+            ltrIndicesArr[set] = (ltrIndicesArr[set] + 1) % numDashes;
           }
-          highlightIndex = (highlightIndex + 1) % dashPositions.length;
-        }, 120); // change 120 for speed
+
+          // RIGHT TO LEFT sets
+          for (let set = 0; set < numHighlightSets; set++) {
+            const setBase = set * numHighlights;
+            const rtlIndices = [];
+            for (let i = 0; i < numHighlights; i++) {
+              let idx = (rtlIndicesArr[set] - i + numDashes) % numDashes;
+              rtlIndices.push(idx);
+            }
+            rtlIndices.forEach((idx, i) => {
+              let isOverlap = false;
+              for (let setLTR = 0; setLTR < numHighlightSets; setLTR++) {
+                for (let j = 0; j < numHighlights; j++) {
+                  let idxLTR = (ltrIndicesArr[setLTR] + j) % numDashes;
+                  if (idxLTR === idx) isOverlap = true;
+                }
+              }
+              const d = dashPositions[idx];
+              d3.select(highlightLinesRL.nodes()[setBase + i])
+                .attr("x1", d.p1.x)
+                .attr("y1", d.p1.y)
+                .attr("x2", d.p2.x)
+                .attr("y2", d.p2.y)
+                .attr("stroke", isOverlap ? overlap_color : fargo_highlight);
+            });
+            // Advance this set
+            rtlIndicesArr[set] = (rtlIndicesArr[set] - 1 + numDashes) % numDashes;
+          }
+        }, 120); // animation speed
       });
     </script>
   </body>
