@@ -1,5 +1,6 @@
 import { heartPath, starPath } from './icons.js';
-import { routeWaypoints } from './route.js';
+import { routeWaypoints, slideshowCoords } from './route.js';
+import { mountSlideShow } from './polaroidSlideshow.js';
 
 const topojson_url = "data/states-10m.json";
 const width = 850, height = 500;
@@ -24,6 +25,11 @@ const cities = [
 ];
 
 d3.json(topojson_url).then(function(us) {
+
+  ////////////////////////////////////
+  //       Get Data & Draw Map      //
+  ////////////////////////////////////
+
   // Get TopoJSON geometries (not features!)
   const stateObjects = us.objects.states.geometries
   .filter(d => d.id !== "02" && d.id !== "15");
@@ -80,6 +86,7 @@ d3.json(topojson_url).then(function(us) {
   ////////////////////////////////////
   //          Dashed Route          //
   ////////////////////////////////////
+
   // Draw and Animate Curved Route
   const projectedRoute = routeWaypoints.map(projection);
   const routeLine = d3.line()
@@ -218,7 +225,6 @@ d3.json(topojson_url).then(function(us) {
     }
   }, 120); // animation speed
 
-
   ////////////////////////////////////
   //          Draw Icons            //
   ////////////////////////////////////
@@ -269,4 +275,11 @@ d3.json(topojson_url).then(function(us) {
         .transition().duration(150)
         .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(1.5)`)
     });
+
+    ///////////////////////////
+    //     Mount Slideshow   //
+    ///////////////////////////
+    const slideshowPixel = projection(slideshowCoords)
+    console.log(slideshowPixel)
+    mountSlideShow(slideshowPixel)
 });

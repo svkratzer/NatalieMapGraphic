@@ -1,4 +1,57 @@
-/* Main svg styling */
+:root {
+  --slideshow-size-scale: 0.85;
+}
+
+/* ~~~~~~~~~~~~~~~~~~ */
+/*     Main SVG       */
+/* ~~~~~~~~~~~~~~~~~~ */
+
 body { background: #fff; }
 svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px solid #888; }
 
+/* ~~~~~~~~~~~~~~~~~~ */
+/* Polaroid Slideshow */
+/* ~~~~~~~~~~~~~~~~~~ */
+
+#polaroid-slideshow {
+  position: absolute;
+  left: calc(30px * var(--slideshow-size-scale));
+  bottom: calc(30px * var(--slideshow-size-scale));
+  width: calc(220px * var(--slideshow-size-scale));
+  height: calc(320px * var(--slideshow-size-scale));
+  pointer-events: none; /* so it doesn't block map interactions */
+}
+
+.polaroid {
+  position: absolute;
+  width: calc(200px * var(--slideshow-size-scale));
+  height: calc(250px * var(--slideshow-size-scale));
+  background: #fffbe9; /* Example: pale yellow */
+  border: 2px solid #ddd;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  padding: 12px 12px 30px 12px;
+  box-sizing: border-box;
+  left: 0; top: 0;
+  transition: box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.polaroid img {
+  width: calc(176px * var(--slideshow-size-scale));
+  height: calc(176px * var(--slideshow-size-scale));
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.polaroid-label {
+  font-family: "Playwrite HU", cursive;
+  font-optical-sizing: auto;
+  font-size: calc(1.05em * var(--slideshow-size-scale));
+  color: #555;
+  margin-top: 10px;
+  text-align: center;
+  background: transparent;
+  width: 100%;
+}

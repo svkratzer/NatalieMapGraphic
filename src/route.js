@@ -11,3 +11,7 @@ export const routeWaypoints = [
   [-77.65, 41.00],  // NYC
   [-74.25, 40.80]   // NYC
 ];
+
+// Lower is West, Higher is East
+// Lesser is South, Greater is North
+export const slideshowCoords = [-108, 37]; // Example: SW US corner

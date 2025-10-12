@@ -6,10 +6,17 @@
     <link rel="stylesheet" href="style/main.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
-    <link href="https://fonts.googleapis.com/css?family=Honk&effect=anaglyph" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&effect=anaglyph" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&display=swap" rel="stylesheet">
   </head>
   <body>
-    <svg id="us-map"></svg>
+    <div id="graphic-container" style="position: relative; width: 850px; height: 500px;">
+      <svg id="us-map"></svg>
+      <div id="polaroid-slideshow"></div>
+    </div>
     <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/polaroidSlideshow.js"></script>
   </body>
 </html>
