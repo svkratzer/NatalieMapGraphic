@@ -1,5 +1,5 @@
 export function mountAnimatedCamera(mapPixel) {
-  const CAMERA_SCALE = 0.55;
+  const CAMERA_SCALE = 0.65;
 
   const container = document.getElementById("camera-icon");
   container.innerHTML = "";
@@ -27,9 +27,9 @@ export function mountAnimatedCamera(mapPixel) {
   const bodyX = -bodyWidth / 2, bodyY = 0;
 
   // Label settings
-  const labelText = "PORTFOLIO";
-  const labelFontSize = 18;
-  const letterSpacing = 14;
+  const labelText = "media";
+  const labelFontSize = 22;
+  const letterSpacing = 22;
   const labelY = bodyY + bodyHeight / 2 + 9; // Vertically centered on body
 
   // Camera group
