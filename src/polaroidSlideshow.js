@@ -18,7 +18,7 @@ function addPolaroid(photo, rotation) {
   polaroid.className = 'polaroid';
   polaroid.style.zIndex = polaroidCount + 1;
   polaroid.style.transform = `rotate(${rotation}deg)`;
-  polaroid.style.background = '#fffbe9';
+  // polaroid.style.background = '#fffbe9';
   polaroid.innerHTML = `
     <img src="${photo.src}" alt="${photo.label}">
     <div class="polaroid-label">${photo.label}</div>

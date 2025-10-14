@@ -1,5 +1,5 @@
 :root {
-  --slideshow-size-scale: 0.75;
+  --slideshow-size-scale: 0.6;
 }
 
 /* ~~~~~~~~~~~~~~~~~~ */
@@ -7,7 +7,7 @@
 /* ~~~~~~~~~~~~~~~~~~ */
 
 body { background: #fff; }
-svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px solid #888; }
+#us-map  { width: 850px; height: 500px; display: block; margin: auto; border: 0px solid #888; }
 
 /* ~~~~~~~~~~~~~~~~~~ */
 /* Polaroid Slideshow */
@@ -21,14 +21,14 @@ svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px sol
   height: calc(320px * var(--slideshow-size-scale));
   pointer-events: hover; /* so it doesn't block map interactions */
   cursor: pointer;
-  transition: transform 0.5s;
+  transition: transform 0.3s;
 }
 
 .polaroid {
   position: absolute;
   width: calc(200px * var(--slideshow-size-scale));
   height: calc(250px * var(--slideshow-size-scale));
-  background: #fffbe9; /* Example: pale yellow */
+  background: #ffffff !important; /* Example: pale yellow */
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.083);
   padding: 12px 12px 30px 12px;
   box-sizing: border-box;
@@ -51,7 +51,7 @@ svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px sol
   font-family: "Playwrite HU", cursive;
   font-optical-sizing: auto;
   font-size: calc(1.55em * var(--slideshow-size-scale));
-  color: #555;
+  color: #333333;
   margin-top: 5px;
   text-align: center;
   background: transparent;
@@ -63,7 +63,7 @@ svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px sol
   filter: grayscale(100%);
 }
 #polaroid-slideshow.paused .polaroid {
-  background: #000000;
+  background: #dcdcdc !important;
   transition: background 0.3s;
 }
 #polaroid-slideshow.paused .polaroid-label {
@@ -75,5 +75,10 @@ svg { width: 850px; height: 500px; display: block; margin: auto; border: 0px sol
 /* Scale up slideshow when paused */
 #polaroid-slideshow.paused {
   transform: scale(1.13);
-  transition: transform 0.5s;
+  transition: transform 0.3s;
+}
+
+#camera-icon {
+  position: absolute;
+  background: transparent; /* not white/hidden */
 }

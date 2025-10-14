@@ -1,6 +1,7 @@
 import { heartPath, starPath } from './icons.js';
-import { routeWaypoints, slideshowCoords } from './route.js';
+import { routeWaypoints, slideshowCoords, animatedCameraCoords } from './route.js';
 import { mountSlideShow } from './polaroidSlideshow.js';
+import { mountAnimatedCamera } from './animatedCameraIcon.js';
 
 const topojson_url = "data/states-10m.json";
 const width = 850, height = 500;
@@ -281,5 +282,12 @@ d3.json(topojson_url).then(function(us) {
     ///////////////////////////
     const slideshowPixel = projection(slideshowCoords)
     console.log(slideshowPixel)
-    mountSlideShow(slideshowPixel)
+    mountSlideShow(slideshowPixel);
+
+    ///////////////////////////
+    //     Mount Camera      //
+    ///////////////////////////
+    const animatedCameraPixel = projection(animatedCameraCoords)
+    console.log(animatedCameraPixel)
+    mountAnimatedCamera(animatedCameraPixel);
 });
