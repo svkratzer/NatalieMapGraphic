@@ -1,1 +1,1 @@
-To view the SVG, click [here]([https://github.com/svkratzer/NatalieMapGraphic/blob/main/map_graphic.html](https://svkratzer.github.io/NatalieMapGraphic/)).
+To view the SVG, click [here]([https://svkratzer.github.io/NatalieMapGraphic/)).
