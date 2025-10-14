@@ -14,5 +14,6 @@ export const routeWaypoints = [
 
 // Lower is West, Higher is East
 // Lesser is South, Greater is North
-export const slideshowCoords = [-108, 37]; // Example: SW US corner
+export const slideshowCoords = [-100.5, 35]; // Example: SW US corner
 export const animatedCameraCoords = [-125.25, 39.5]
+export const socialCoords = [-90, 38.5]; // use projection or pixels as needed

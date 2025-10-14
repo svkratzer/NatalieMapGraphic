@@ -28,10 +28,11 @@ body { background: #fff; }
   position: absolute;
   width: calc(200px * var(--slideshow-size-scale));
   height: calc(250px * var(--slideshow-size-scale));
-  background: #ffffff !important; /* Example: pale yellow */
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.083);
+  background: #fffffb !important; /* Example: pale yellow */
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.083);
   padding: 12px 12px 30px 12px;
   box-sizing: border-box;
+  border: solid #424242 0.4px;
   left: 0; top: 0;
   transition: box-shadow 0.3s, background 0.3;
   display: flex;
@@ -42,6 +43,7 @@ body { background: #fff; }
 .polaroid img {
   width: calc(176px * var(--slideshow-size-scale));
   height: calc(176px * var(--slideshow-size-scale));
+  border: solid #424242 0.4px;
   object-fit: cover;
   border-radius: 6px;
   transition: filter 0.3s;
@@ -65,7 +67,7 @@ body { background: #fff; }
   filter: grayscale(100%);
 }
 #polaroid-slideshow.paused .polaroid {
-  background: #dcdcdc !important;
+  background: #fffffb !important;
   transition: background 0.3s;
 }
 #polaroid-slideshow.paused .polaroid-label {
@@ -82,4 +84,10 @@ body { background: #fff; }
 #camera-icon {
   position: absolute;
   background: transparent; /* not white/hidden */
+}
+
+#social-group {
+  position: absolute;
+  z-index: 20;
+  pointer-events: auto;
 }

@@ -1,7 +1,8 @@
 import { heartPath, starPath } from './icons.js';
-import { routeWaypoints, slideshowCoords, animatedCameraCoords } from './route.js';
+import { routeWaypoints, slideshowCoords, animatedCameraCoords, socialCoords } from './route.js';
 import { mountSlideShow } from './polaroidSlideshow.js';
 import { mountAnimatedCamera } from './animatedCameraIcon.js';
+import { mountSocialGroup } from './socialGroup.js';
 
 const topojson_url = "data/states-10m.json";
 const width = 850, height = 500;
@@ -295,4 +296,11 @@ d3.json(topojson_url).then(function(us) {
     const animatedCameraPixel = projection(animatedCameraCoords)
     console.log(animatedCameraPixel)
     mountAnimatedCamera(animatedCameraPixel);
+
+    ///////////////////////////
+    //     Mount Social      //
+    ///////////////////////////
+    const socialPixel = projection(socialCoords)
+    console.log(socialPixel)
+    mountSocialGroup(socialPixel);
 });
