@@ -1,7 +1,7 @@
 const photos = [
-  { src: 'assets/PandO1.jpg', label: 'Gallery' },
-  { src: 'assets/PandO2.jpg', label: 'Gallery' },
-  { src: 'assets/PandO3.jpg', label: 'Gallery' },
+  { src: 'assets/PandO1.jpg', label: 'GALLERY' },
+  { src: 'assets/PandO2.jpg', label: 'GALLERY' },
+  { src: 'assets/PandO3.jpg', label: 'GALLERY' },
 ];
 
 const polaroidContainer = document.getElementById('polaroid-slideshow');
@@ -18,7 +18,7 @@ function addPolaroid(photo, rotation) {
   polaroid.className = 'polaroid';
   polaroid.style.zIndex = polaroidCount + 1;
   polaroid.style.transform = `rotate(${rotation}deg)`;
-  polaroid.style.background = '#fffbe9';
+  // polaroid.style.background = '#fffbe9';
   polaroid.innerHTML = `
     <img src="${photo.src}" alt="${photo.label}">
     <div class="polaroid-label">${photo.label}</div>
