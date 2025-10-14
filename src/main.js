@@ -230,6 +230,11 @@ d3.json(topojson_url).then(function(us) {
   //          Draw Icons            //
   ////////////////////////////////////
 
+  const heartScale = 1.2;
+  const starScale = 1.2;
+  const starLink = "https://link-for-nyc.com";
+  const heartLink = "https://link-for-fargo.com";
+
   // Define offsets for icons
   const star_x_offset = 0;
   const star_y_offset = 0;
@@ -239,42 +244,42 @@ d3.json(topojson_url).then(function(us) {
   // HEART ICON (Fargo)
   svg.append("path")
     .attr("d", heartPath)
-    .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(0.4)`)
+    .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(${0.4 * heartScale})`)
     .attr("fill", fargo_color)
     .attr("stroke", text_color)
     .attr("stroke-width", 1)
     .style("cursor", "pointer")
-    .on("click", () => window.open("https://link-for-fargo.com", "_blank"))
+    .on("click", () => window.open(heartLink, "_blank"))
     .on("mouseover", function() {
       d3.select(this)
         .transition().duration(150)
-        .attr("transform", `translate(${(cities[0].pixel[0] - heart_x_offset)},${(cities[0].pixel[1] - heart_y_offset)}) scale(0.55)`)
+        .attr("transform", `translate(${(cities[0].pixel[0] - heart_x_offset)},${(cities[0].pixel[1] - heart_y_offset)}) scale(${0.55 * heartScale})`)
       })
     .on("mouseout", function() {
       d3.select(this)
         .transition().duration(150)
-        .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(0.4)`)
+        .attr("transform", `translate(${cities[0].pixel[0]},${cities[0].pixel[1]}) scale(${0.4 * heartScale})`)
       });
 
   // STAR ICON (NYC)
   svg.append("path")
     .attr("class", "nyc-star")
     .attr("d", starPath)
-    .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(1.5)`)
+    .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(${1.5 * starScale})`)
     .attr("fill", nyc_color)
     .attr("stroke", text_color)
     .attr("stroke-width", .5)
     .style("cursor", "pointer")
-    .on("click", () => window.open("https://link-for-nyc.com", "_blank"))
+    .on("click", () => window.open(starLink, "_blank"))
     .on("mouseover", function() {
       d3.select(this)
         .transition().duration(150)
-        .attr("transform", `translate(${(cities[1].pixel[0] - star_x_offset)},${(cities[1].pixel[1] - star_y_offset)}) scale(2.1)`)
+        .attr("transform", `translate(${(cities[1].pixel[0] - star_x_offset)},${(cities[1].pixel[1] - star_y_offset)}) scale(${2.1 * starScale})`)
     })
     .on("mouseout", function() {
       d3.select(this)
         .transition().duration(150)
-        .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(1.5)`)
+        .attr("transform", `translate(${cities[1].pixel[0]},${cities[1].pixel[1]}) scale(${1.5 * starScale})`)
     });
 
     ///////////////////////////
