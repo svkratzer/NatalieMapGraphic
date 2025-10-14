@@ -1,7 +1,7 @@
 const photos = [
-  { src: 'assets/PandO1.jpg', label: 'Gallery' },
-  { src: 'assets/PandO2.jpg', label: 'Gallery' },
-  { src: 'assets/PandO3.jpg', label: 'Gallery' },
+  { src: 'assets/PandO1.jpg', label: 'GALLERY' },
+  { src: 'assets/PandO2.jpg', label: 'GALLERY' },
+  { src: 'assets/PandO3.jpg', label: 'GALLERY' },
 ];
 
 const polaroidContainer = document.getElementById('polaroid-slideshow');

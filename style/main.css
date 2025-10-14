@@ -48,11 +48,12 @@ body { background: #fff; }
 }
 
 .polaroid-label {
-  font-family: "Playwrite HU", cursive;
+  font-family: sans-serif;
+  font-weight: 600;
   font-optical-sizing: auto;
   font-size: calc(1.55em * var(--slideshow-size-scale));
   color: #333333;
-  margin-top: 5px;
+  margin-top: 3px;
   text-align: center;
   background: transparent;
   width: 100%;
@@ -67,9 +68,8 @@ body { background: #fff; }
   transition: background 0.3s;
 }
 #polaroid-slideshow.paused .polaroid-label {
-  font-weight: 600;
   color: #000000; /* example accent color */
-  transition: color 0.1s, font-weight 0.1s;
+  transition: color 0.3s, font-weight 0.3s;
 }
 
 /* Scale up slideshow when paused */
