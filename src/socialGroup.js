@@ -31,9 +31,9 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
   // D3 force simulation
   const simulation = d3.forceSimulation(nodes)
     .force("center", d3.forceCenter(width/2, height/2))
-    .force("collide", d3.forceCollide().radius(d => d.r + 2).strength(3))
-    .force("x", d3.forceX(width).strength(0.05))
-    .force("y", d3.forceY(height).strength(0.05))
+    .force("collide", d3.forceCollide().radius(d => d.r + 1).strength(1))
+    .force("x", d3.forceX(width).strength(0.01))
+    .force("y", d3.forceY(height).strength(0.01))
     .alpha(1)
     .alphaDecay(0.03)
     .on("tick", ticked);
@@ -64,7 +64,7 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
 
   // Vibration intervals for each icon
   let vibrateIntervals = {};
-  let mouseOverSizeDurationStart = 150
+  let mouseOverSizeDurationStart = 550
   let mouseOverSizeDurationEnd = 150
   let mouseOverSizeScale = 1.4
 
@@ -81,7 +81,7 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
       .attr("x", -d.r * 0.75)
       .attr("y", -d.r * 0.75);
 
-    // Start vibration on the image in this group
+    // // Start vibration on the image in this group
     const group = d3.select(this);
     const img = group.select("image");
     if (vibrateIntervals[d.id]) clearInterval(vibrateIntervals[d.id]);
@@ -127,7 +127,7 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
   const CLICK_TIME_THRESHOLD = 180; // ms
   let dragStartTime = {};
 
-  // Drag logic with vibration
+  // Drag logic
   groups.call(
     d3.drag()
       .on("start", function(event, d) {
@@ -135,19 +135,6 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
         simulation.alphaTarget(0.5).restart();
         d.fx = d.x;
         d.fy = d.y;
-
-        // Start vibration on the image in this group
-        const group = d3.select(this);
-        const img = group.select("image");
-        if (vibrateIntervals[d.id]) clearInterval(vibrateIntervals[d.id]);
-        vibrateIntervals[d.id] = setInterval(() => {
-          // Small random shake
-          const dx = (Math.random() - 0.5) * 4;
-          const dy = (Math.random() - 0.5) * 4;
-          img
-            .attr("x", -d.r * 0.75 + dx)
-            .attr("y", -d.r * 0.75 + dy);
-        }, 40);
       })
       .on("drag", function(event, d) {
         d.fx = event.x;
@@ -157,17 +144,6 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
         simulation.alphaTarget(0);
         d.fx = null;
         d.fy = null;
-        // Stop vibration and reset image position
-        if (vibrateIntervals[d.id]) {
-          clearInterval(vibrateIntervals[d.id]);
-          vibrateIntervals[d.id] = null;
-        }
-        const group = d3.select(this);
-        const img = group.select("image");
-        img
-          .attr("x", -d.r * 0.75)
-          .attr("y", -d.r * 0.75);
-
         // Check to see if we should open the link
         const dt = Date.now() - dragStartTime[d.id];
         if (dt < CLICK_TIME_THRESHOLD) {
