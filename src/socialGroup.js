@@ -31,10 +31,10 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
   // D3 force simulation
   const simulation = d3.forceSimulation(nodes)
     .force("center", d3.forceCenter(width/2, height/2))
-    .force("collide", d3.forceCollide().radius(d => d.r + 2).strength(0.7))
-    .force("x", d3.forceX(width/2).strength(0.1))
-    .force("y", d3.forceY(height/2).strength(0.1))
-    .alpha(0.8)
+    .force("collide", d3.forceCollide().radius(d => d.r + 2).strength(3))
+    .force("x", d3.forceX(width).strength(0.05))
+    .force("y", d3.forceY(height).strength(0.05))
+    .alpha(1)
     .alphaDecay(0.03)
     .on("tick", ticked);
 
@@ -64,15 +64,18 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
 
   // Vibration intervals for each icon
   let vibrateIntervals = {};
+  let mouseOverSizeDurationStart = 150
+  let mouseOverSizeDurationEnd = 150
+  let mouseOverSizeScale = 1.4
 
   groups.on("mouseover", function(e, d) {
-    d.r = d.originalR * 1.3;
+    d.r = d.originalR * mouseOverSizeScale;
     d3.select(this).select("circle")
-      .transition().duration(150)
+      .transition().duration(mouseOverSizeDurationStart)
       .attr("r", d.r);
   
     d3.select(this).select("image")
-      .transition().duration(150)
+      .transition().duration(mouseOverSizeDurationStart)
       .attr("width", d.r * 1.5)
       .attr("height", d.r * 1.5)
       .attr("x", -d.r * 0.75)
@@ -96,11 +99,11 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
   }).on("mouseout", function(e, d) {
     d.r = d.originalR;
     d3.select(this).select("circle")
-      .transition().duration(150)
+      .transition().duration(mouseOverSizeDurationEnd)
       .attr("r", d.r);
   
     d3.select(this).select("image")
-      .transition().duration(150)
+      .transition().duration(mouseOverSizeDurationEnd)
       .attr("width", d.r * 1.5)
       .attr("height", d.r * 1.5)
       .attr("x", -d.r * 0.75)
