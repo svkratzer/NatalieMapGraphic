@@ -24,7 +24,7 @@ export function mountSocialGroup(pixel, scale = 1.0, icons = [
   // Initial positions
   const nodes = [
     { id: 0, x: width/3, y: height/2, r: 30*scale , originalR: 30*scale, ...icons[0] },
-    { id: 1, x: width/2, y: height/2, r: 30*scale, originalR: 30*scale, ...icons[1] },
+    { id: 1, x: width/2, y: height, r: 30*scale, originalR: 30*scale, ...icons[1] },
     { id: 2, x: 2*width/3, y: height/2, r: 30*scale, originalR: 30*scale, ...icons[2] },
   ];
 
