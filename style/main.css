@@ -62,6 +62,13 @@ body { background: #fff; }
   width: 100%;
 }
 
+.shaking-letter {
+  display: inline-block;
+  font-size: 14px;
+  transition: transform 0.08s;
+  will-change: transform;
+}
+
 /* Polaroid hover state: images grayscale, bg dark, font bolder/color */
 #polaroid-slideshow.paused .polaroid img {
   filter: grayscale(100%);
